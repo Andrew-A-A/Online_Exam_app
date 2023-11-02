@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "501661202025",
+    "project_id": "online-exam-app-40405",
+    "storage_bucket": "online-exam-app-40405.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:501661202025:android:123b89555ae16281bc54f8",
+        "android_client_info": {
+          "package_name": "com.andrew.saba.onlineexamapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsBvfHF2XnBe4-S2YyPULtkiykpN3xnmE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
