@@ -18,7 +18,7 @@ public class HomeViewModel extends ViewModel {
     private static final String QUESTION = "question";
 
     boolean isDataGotten=false;
-    private final ArrayList<Question> questions=new ArrayList<>();
+     public final static ArrayList<Question> questions=new ArrayList<>();
 
 
     public HomeViewModel() {

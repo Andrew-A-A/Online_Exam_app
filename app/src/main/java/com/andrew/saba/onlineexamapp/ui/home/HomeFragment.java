@@ -29,7 +29,6 @@ public class HomeFragment extends Fragment {
         binding.button.setOnClickListener(view -> {
 
           NavDirections action = new ActionOnlyNavDirections(R.id.action_nav_home_to_examFragment);
-
            Navigation.findNavController(view).navigate(action);
 
         });
