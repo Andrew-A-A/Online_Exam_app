@@ -1,31 +1,30 @@
 package com.andrew.saba.onlineexamapp.ui.login;
 
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.andrew.saba.onlineexamapp.MainActivity;
 import com.andrew.saba.onlineexamapp.R;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -162,13 +161,27 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseUser user = auth.getCurrentUser();
         if (user != null) {
             String userEmail = user.getEmail();
-
-            // Start the next activity and pass the user's email as an extra
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            intent.putExtra("userEmail", userEmail);
-            startActivity(intent);
-            finish(); // Optional: finish the current activity to prevent going back to the login screen
+            if (!isMainActivityRunning()) {
+                // Start the next activity and pass the user's email as an extra
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra("userEmail", userEmail);
+                startActivity(intent);
+                finish();
+            }
         }
     }
+    // Helper method to check if MainActivity is running
+    private boolean isMainActivityRunning() {
+        ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> runningTasks = activityManager.getRunningTasks(Integer.MAX_VALUE);
 
+        for (ActivityManager.RunningTaskInfo taskInfo : runningTasks) {
+            if (taskInfo.baseActivity.getPackageName().equals(getPackageName()) &&
+                    taskInfo.baseActivity.getClassName().equals(MainActivity.class.getName())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

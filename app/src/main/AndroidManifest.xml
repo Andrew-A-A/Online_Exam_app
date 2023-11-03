@@ -30,6 +30,10 @@
             android:label="@string/app_name"
             android:theme="@style/Theme.OnlineExamApp.NoActionBar">
         </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

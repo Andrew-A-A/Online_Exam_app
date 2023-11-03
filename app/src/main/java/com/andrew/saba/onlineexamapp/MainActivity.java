@@ -27,11 +27,6 @@ public class MainActivity extends AppCompatActivity {
 
     private NavHeaderMainBinding nav_binding;
 
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-    private static final String ANSWER = "answer";
-    private static final String MCQ = "mcq";
-    private static final String QUESTION = "question";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,33 +54,18 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
+                R.id.nav_home)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        db.collection("questions").get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    Log.d("DB", document.getId() + " => " +   document.get("answer"));
 
-                }
-            } else {
-                Log.w("DB", "Error getting documents.", task.getException());
-                Toast.makeText(getApplicationContext(), "Can't connect to server", Toast.LENGTH_SHORT).show();
-            }
-        });
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
+
 
     @Override
     public boolean onSupportNavigateUp() {
