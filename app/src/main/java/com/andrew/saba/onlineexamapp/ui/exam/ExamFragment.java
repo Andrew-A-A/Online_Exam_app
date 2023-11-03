@@ -1,6 +1,5 @@
-package com.andrew.saba.onlineexamapp;
+package com.andrew.saba.onlineexamapp.ui.exam;
 
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -14,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 
+import com.andrew.saba.onlineexamapp.R;
 import com.andrew.saba.onlineexamapp.databinding.FragmentExamBinding;
 
 public class ExamFragment extends Fragment {

@@ -1,6 +1,5 @@
-package com.andrew.saba.onlineexamapp;
+package com.andrew.saba.onlineexamapp.ui.exam;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 

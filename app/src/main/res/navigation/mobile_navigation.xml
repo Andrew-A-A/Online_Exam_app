@@ -22,7 +22,7 @@
 
     <fragment
         android:id="@+id/examFragment"
-        android:name="com.andrew.saba.onlineexamapp.ExamFragment"
+        android:name="com.andrew.saba.onlineexamapp.ui.exam.ExamFragment"
         android:label="Exam"
         tools:layout="@layout/fragment_exam" />
 </navigation>

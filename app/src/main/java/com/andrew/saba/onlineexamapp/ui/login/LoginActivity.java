@@ -4,10 +4,11 @@ import android.app.ActivityManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,6 +19,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,10 +32,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 4;
     private EditText emailEditText, passwordEditText;
-    private Button emailLoginButton, googleSignInButton;
     private FirebaseAuth auth;
-
-    private Button registrationButton;
     private GoogleSignInClient googleSignInClient;
 
     @Override
@@ -41,19 +40,24 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Initialize UI components
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
-        emailLoginButton = findViewById(R.id.emailLoginButton);
-        googleSignInButton = findViewById(R.id.googleSignInButton);
-        registrationButton = findViewById(R.id.registrationButton);
+        Button emailLoginButton = findViewById(R.id.emailLoginButton);
+        Button googleSignInButton = findViewById(R.id.googleSignInButton);
+        Button registrationButton = findViewById(R.id.registrationButton);
 
+        // Initialize Firebase Authentication
         auth = FirebaseAuth.getInstance();
+
+        // Configure Google Sign-In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.web_client_id))
                 .requestEmail()
                 .build();
         googleSignInClient = GoogleSignIn.getClient(this, gso);
 
+        // Email login button click listener
         emailLoginButton.setOnClickListener(view -> {
             String email = emailEditText.getText().toString();
             String password = passwordEditText.getText().toString();
@@ -63,34 +67,39 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // Handle the registration button click
+        // Registration button click listener
         registrationButton.setOnClickListener(view -> {
             String email = emailEditText.getText().toString();
             String password = passwordEditText.getText().toString();
 
             if (!email.isEmpty() && !password.isEmpty()) {
-                // Create a new user account with email and password
                 registerWithEmailPassword(email, password);
             }
         });
 
+        // Google Sign-In button click listener
         googleSignInButton.setOnClickListener(view -> signInWithGoogle());
     }
 
+    // Sign in with email and password
     private void signInWithEmailPassword(String email, String password) {
-        auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        FirebaseUser user = auth.getCurrentUser();
-                        // User is logged in
-                        Log.i("login", "signInWithEmailPassword: Login done ");
-                    } else {
-                        // Failed to log in with email and password
-                        Log.i("login", "signInWithEmailPassword: err ");
-                    }
-                });
+        auth.signInWithEmailAndPassword(email, password).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), "User not found, register please", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnCompleteListener(this, task -> {
+            if (task.isSuccessful()) {
+                FirebaseUser user = auth.getCurrentUser();
+                Log.i("login", "signInWithEmailPassword: Login done");
+                loginDone();
+            }  // Failed to log in with email and password
+            // Handle the failure
+
+        });
     }
 
+    // Sign in with Google
     private void signInWithGoogle() {
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
@@ -108,61 +117,44 @@ public class LoginActivity extends AppCompatActivity {
                 loginDone();
             } catch (ApiException e) {
                 // Failed to sign in with Google
+                Toast.makeText(this, "Error, " + e, Toast.LENGTH_SHORT).show();
             }
         }
     }
 
+    // Sign in with Firebase using Google credentials
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = auth.getCurrentUser();
-                        // User is logged in with Google
-                        Log.i("login", "signInWithGoogle: Login done ");
+                        Log.i("login", "signInWithGoogle: Login done");
                         loginDone();
                     } else {
                         // Failed to log in with Google
+                        Toast.makeText(this, "Error, please try again", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    // A placeholder username validation check
-    private boolean isUserNameValid(String username) {
-        if (username == null) {
-            return false;
-        }
-        if (username.contains("@")) {
-            return Patterns.EMAIL_ADDRESS.matcher(username).matches();
-        } else {
-            return !username.trim().isEmpty();
-        }
-    }
-
-    // A placeholder password validation check
-    private boolean isPasswordValid(String password) {
-        return password != null && password.trim().length() > 5;
-    }
-
+    // Register a new user with email and password
     private void registerWithEmailPassword(String email, String password) {
-        auth.createUserWithEmailAndPassword(email, password)
+        auth.createUserWithEmailAndPassword(email, password).addOnFailureListener(e -> Toast.makeText(this, "Error, " + e, Toast.LENGTH_SHORT).show())
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = auth.getCurrentUser();
-                        // User registration successful, you can perform additional actions like sending a verification email.
                         loginDone();
-                    } else {
-                        // Registration failed. Handle errors here.
                     }
                 });
     }
 
+    // Handle the completion of login or registration
     private void loginDone() {
         FirebaseUser user = auth.getCurrentUser();
         if (user != null) {
             String userEmail = user.getEmail();
             if (!isMainActivityRunning()) {
-                // Start the next activity and pass the user's email as an extra
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.putExtra("userEmail", userEmail);
                 startActivity(intent);
@@ -170,6 +162,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
+
     // Helper method to check if MainActivity is running
     private boolean isMainActivityRunning() {
         ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
