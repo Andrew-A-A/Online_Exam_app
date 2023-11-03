@@ -19,5 +19,6 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
-    <string name="your_web_client_id">501661202025-ksmlg3o4t647roa5r9p1p1v13pe0llbe.apps.googleusercontent.com</string>
+    <string name="web_client_id">501661202025-ksmlg3o4t647roa5r9p1p1v13pe0llbe.apps.googleusercontent.com</string>
+    <string name="menu_logout">Logout</string>
 </resources>

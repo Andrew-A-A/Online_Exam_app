@@ -7,7 +7,6 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,11 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.andrew.saba.onlineexamapp.MainActivity;
 import com.andrew.saba.onlineexamapp.R;
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -54,48 +50,37 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.your_web_client_id))
+                .requestIdToken(getString(R.string.web_client_id))
                 .requestEmail()
                 .build();
         googleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        emailLoginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String email = emailEditText.getText().toString();
-                String password = passwordEditText.getText().toString();
+        emailLoginButton.setOnClickListener(view -> {
+            String email = emailEditText.getText().toString();
+            String password = passwordEditText.getText().toString();
 
-                if (!email.isEmpty() && !password.isEmpty()) {
-                    signInWithEmailPassword(email, password);
-                }
+            if (!email.isEmpty() && !password.isEmpty()) {
+                signInWithEmailPassword(email, password);
             }
         });
 
         // Handle the registration button click
-        registrationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String email = emailEditText.getText().toString();
-                String password = passwordEditText.getText().toString();
+        registrationButton.setOnClickListener(view -> {
+            String email = emailEditText.getText().toString();
+            String password = passwordEditText.getText().toString();
 
-                if (!email.isEmpty() && !password.isEmpty()) {
-                    // Create a new user account with email and password
-                    registerWithEmailPassword(email, password);
-                }
+            if (!email.isEmpty() && !password.isEmpty()) {
+                // Create a new user account with email and password
+                registerWithEmailPassword(email, password);
             }
         });
 
-        googleSignInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signInWithGoogle();
-            }
-        });
+        googleSignInButton.setOnClickListener(view -> signInWithGoogle());
     }
 
     private void signInWithEmailPassword(String email, String password) {
         auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, (OnCompleteListener<AuthResult>) task -> {
+                .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = auth.getCurrentUser();
                         // User is logged in
@@ -131,17 +116,14 @@ public class LoginActivity extends AppCompatActivity {
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         auth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = auth.getCurrentUser();
-                            // User is logged in with Google
-                            Log.i("login", "signInWithGoogle: Login done ");
-                            loginDone();
-                        } else {
-                            // Failed to log in with Google
-                        }
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = auth.getCurrentUser();
+                        // User is logged in with Google
+                        Log.i("login", "signInWithGoogle: Login done ");
+                        loginDone();
+                    } else {
+                        // Failed to log in with Google
                     }
                 });
     }

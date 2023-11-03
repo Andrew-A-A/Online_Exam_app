@@ -2,22 +2,23 @@ package com.andrew.saba.onlineexamapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.view.Menu;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import com.andrew.saba.onlineexamapp.databinding.NavHeaderMainBinding;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.navigation.NavigationView;
-
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.andrew.saba.onlineexamapp.databinding.ActivityMainBinding;
+import com.andrew.saba.onlineexamapp.databinding.NavHeaderMainBinding;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,13 +27,16 @@ public class MainActivity extends AppCompatActivity {
 
     private NavHeaderMainBinding nav_binding;
 
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    private static final String ANSWER = "answer";
+    private static final String MCQ = "mcq";
+    private static final String QUESTION = "question";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //binding = ActivityMainBinding.inflate(getLayoutInflater());
         // Access the NavigationView variable
         nav_binding= NavHeaderMainBinding.inflate(getLayoutInflater());
         binding=ActivityMainBinding.inflate(getLayoutInflater());
@@ -62,6 +66,17 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        db.collection("questions").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    Log.d("DB", document.getId() + " => " +   document.get("answer"));
+
+                }
+            } else {
+                Log.w("DB", "Error getting documents.", task.getException());
+                Toast.makeText(getApplicationContext(), "Can't connect to server", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
