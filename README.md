@@ -80,3 +80,12 @@ Once you have set up the Online Exam Application, you can start using it for con
 4. **Data Management**:
 
    - All exam-related data is securely stored in the Firebase real-time database.
+
+## Screenshots
+<img src="https://github.com/Andrew-A-A/Online_Exam_app/assets/85433014/f432b109-860f-467e-bb9c-e1d2f13200ab" width="230"/>
+<img src="https://github.com/Andrew-A-A/Online_Exam_app/assets/85433014/48b58260-6a2e-4515-8f45-bdd7c0c4cf33" width="230"/>
+<img src="https://github.com/Andrew-A-A/Online_Exam_app/assets/85433014/e4390fe5-775d-4999-9349-a3a2b18d5e71" width="230"/>
+<img src="https://github.com/Andrew-A-A/Online_Exam_app/assets/85433014/133d4dd9-8cdb-429f-95a0-4aa8e26d3b5e" width="230"/>
+
+
+
