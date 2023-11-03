@@ -32,6 +32,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 4;
     private EditText emailEditText, passwordEditText;
+
+
     private FirebaseAuth auth;
     private GoogleSignInClient googleSignInClient;
 
@@ -93,8 +95,7 @@ public class LoginActivity extends AppCompatActivity {
                 FirebaseUser user = auth.getCurrentUser();
                 Log.i("login", "signInWithEmailPassword: Login done");
                 loginDone();
-            }  // Failed to log in with email and password
-            // Handle the failure
+            }
 
         });
     }
@@ -174,7 +175,6 @@ public class LoginActivity extends AppCompatActivity {
                 return true;
             }
         }
-
         return false;
     }
 }

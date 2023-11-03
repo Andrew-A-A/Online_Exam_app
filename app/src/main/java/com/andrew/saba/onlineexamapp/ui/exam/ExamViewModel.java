@@ -10,54 +10,62 @@ import java.util.ArrayList;
 
 
 public class ExamViewModel extends ViewModel {
+
+    // Questions list
     ArrayList<Question> questions=HomeViewModel.questions;
 
-
-
-    MutableLiveData<Boolean> isFinished=new MutableLiveData<>(false);
-    int currentQuestionIndex=0;
-
-    MutableLiveData<String> selectedValue=new MutableLiveData<>();
-
+    // Total user grade
     int grade=0;
 
+    // Store index of current question
+    int currentQuestionIndex=0;
 
+    // boolean detect if questions are all solved
+    MutableLiveData<Boolean> isFinished=new MutableLiveData<>(false);
+
+
+    // Store current question to show in UI
+    MutableLiveData<Question> currentQuestion= new MutableLiveData<>(questions.get(0));
+
+
+    // Store the value user selected
+    MutableLiveData<String> selectedValue=new MutableLiveData<>();
+
+    // Store answers entered by the user
+    ArrayList<String> selectedAnswers= new ArrayList<>();
+
+
+    //Update selected value
     public void setSelectedValue(String value) {
         selectedValue.setValue(value);
     }
 
-    MutableLiveData<Question> currentQuestion= new MutableLiveData<>(questions.get(0));
-    int score=0;
-
-    ArrayList<String> selectedAnswers= new ArrayList<>();
-    public ExamViewModel() {
-
-    }
-
-
+    // Calculate user grade
     public void getGrade(){
         currentQuestionIndex=0;
         for (int i = 0; i < questions.size(); i++) {
             Question q=questions.get(i);
             String a=selectedAnswers.get(i);
             if (q.answer.equals(a)){
-                score++;
+                grade++;
             }
         }
-        grade= score;
     }
 
+    // Add answer select by the user to selected answers list
     public void submitSelectedAnswer(){
         selectedAnswers.add(selectedValue.getValue());
     }
 
-  public void nextQuestion(){
+    // Move to next question
+     public void nextQuestion(){
         currentQuestionIndex++;
+        // If there is no other questions the calculate user grade and finish the exam
         if (currentQuestionIndex>questions.size()-1) {
             getGrade();
             isFinished.setValue(true);
             return;
         }
         currentQuestion.setValue(questions.get(currentQuestionIndex));
-  }
+    }
 }

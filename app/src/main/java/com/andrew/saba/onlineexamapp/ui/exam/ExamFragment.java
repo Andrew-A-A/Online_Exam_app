@@ -18,17 +18,20 @@ import com.andrew.saba.onlineexamapp.databinding.FragmentExamBinding;
 
 public class ExamFragment extends Fragment {
 
+    // Declare view model object
     private ExamViewModel viewModel;
 
     public static ExamFragment newInstance() {
         return new ExamFragment();
     }
 
+    // Binding object
     private FragmentExamBinding binding;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        // Initialize binding object
         binding=FragmentExamBinding.inflate(inflater);
         return binding.getRoot();
     }
@@ -36,7 +39,31 @@ public class ExamFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        // Initialize  view model object
         viewModel = new ViewModelProvider(this).get(ExamViewModel.class);
+
+        // Set check listener for the radio buttons
+        binding.radioGroup.setOnCheckedChangeListener((radioGroup, i) -> {
+            // Show 'next' button in UI
+            binding.nextBtn.setVisibility(View.VISIBLE);
+            // Update selected answer captured from UI in view model
+            RadioButton selectedRadioButton = radioGroup.findViewById(i);
+            if (selectedRadioButton != null) {
+                String selectedValue = selectedRadioButton.getText().toString();
+                viewModel.setSelectedValue(selectedValue);
+            }
+        });
+
+        // Set click listener for the 'Next' button
+        binding.nextBtn.setOnClickListener(view ->{
+            binding.radioGroup.clearCheck();
+            binding.nextBtn.setVisibility(View.GONE);
+            viewModel.submitSelectedAnswer();
+            viewModel.nextQuestion();
+        });
+
+
+        // Set observer to update UI with current question
         viewModel.currentQuestion.observe(this.getViewLifecycleOwner(), question -> {
             binding.questionText.setText(question.question);
             binding.radioButton0.setText(question.mcq.get(0));
@@ -45,15 +72,8 @@ public class ExamFragment extends Fragment {
             binding.radioButton3.setText(question.mcq.get(3));
         });
 
-        binding.radioGroup.setOnCheckedChangeListener((radioGroup, i) -> {
-            binding.nextBtn.setVisibility(View.VISIBLE);
-            RadioButton selectedRadioButton = radioGroup.findViewById(i);
-            if (selectedRadioButton != null) {
-                String selectedValue = selectedRadioButton.getText().toString();
-                viewModel.setSelectedValue(selectedValue);
-            }
-        });
 
+        // Set observer to detect if user finished the exam
         viewModel.isFinished.observe(this.getViewLifecycleOwner(), isDone -> {
             if (isDone){
                 binding.radioGroup.setVisibility(View.GONE);
@@ -61,13 +81,6 @@ public class ExamFragment extends Fragment {
                 binding.imageView4.setImageResource(R.drawable.baseline_grading_24);
                 binding.questionText.setText(String.format("Your final grade is %d / %d", viewModel.grade, viewModel.questions.size()));
             }
-        });
-
-        binding.nextBtn.setOnClickListener(view ->{
-            binding.radioGroup.clearCheck();
-            binding.nextBtn.setVisibility(View.GONE);
-            viewModel.submitSelectedAnswer();
-            viewModel.nextQuestion();
         });
     }
 

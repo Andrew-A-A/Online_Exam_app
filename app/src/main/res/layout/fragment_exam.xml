@@ -15,11 +15,11 @@
         android:layout_height="match_parent">
 
 
-
         <ImageView
             android:id="@+id/imageView4"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:contentDescription="@string/question_mark_icon"
             android:src="@drawable/baseline_question_mark_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -27,7 +27,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.251"
-            app:tint="#BA85FB" />
+            app:tint="#BA85FB"
+            tools:ignore="ImageContrastCheck" />
 
         <TextView
             android:id="@+id/question_text"
@@ -56,28 +57,32 @@
                 android:layout_height="wrap_content"
                 android:buttonTint="#B984FA"
                 tools:checked="true"
-                tools:text="Android" />
+                tools:text="Android"
+                tools:ignore="VisualLintButtonSize" />
 
             <RadioButton
                 android:id="@+id/radioButton1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:buttonTint="#B984FA"
-                tools:text="Mac OS" />
+                tools:text="Mac OS"
+                tools:ignore="VisualLintButtonSize" />
 
             <RadioButton
                 android:id="@+id/radioButton2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:buttonTint="#B984FA"
-                tools:text="Windows" />
+                tools:text="Windows"
+                tools:ignore="VisualLintButtonSize" />
 
             <RadioButton
                 android:id="@+id/radioButton3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:buttonTint="#B984FA"
-                tools:text="IOS" />
+                tools:text="IOS"
+                tools:ignore="VisualLintButtonSize" />
         </RadioGroup>
 
         <Button

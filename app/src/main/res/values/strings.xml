@@ -22,4 +22,16 @@
     <string name="web_client_id">501661202025-ksmlg3o4t647roa5r9p1p1v13pe0llbe.apps.googleusercontent.com</string>
     <string name="menu_logout">Logout</string>
     <string name="next">Next</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="log_in_with_email">Log in with Email</string>
+    <string name="register">Register</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="app_icon">App Icon</string>
+    <string name="question_mark_icon">Question mark icon</string>
+    <string name="general_knowledge_quiz">General knowledge quiz</string>
+    <string name="online">Online</string>
+    <string name="start">Start</string>
+    <string name="climb_the_summit_of_success">Climb the Summit of Success!</string>
+    <string name="quiz_icon">Quiz icon</string>
 </resources>
